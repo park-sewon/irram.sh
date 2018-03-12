@@ -1,0 +1,77 @@
+#!/bin/bash
+
+#location to irram lib with version control
+#version 0 is default
+loc=("/home/sewon/Desktop/irram/iRRAM_2017_01/installed" "/home/sewon/Desktop/irram/iRRAM_2018_01/installed" "/home/sewon/Desktop/irram/iRRAM_2013_01/installed")
+
+
+ind=-1
+OUTPUT=a.out
+VERSION=0
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    	-o|--output)
+    	OUTPUT="$2"
+    	shift # past argument
+    	shift # past value
+    	;;
+    	-v|--version)
+    	VERSION="$2"
+    	shift # past argument
+    	shift # past value
+    	;;
+    	-*|--*)
+    	echo unknown option "$1"
+    	exit 1
+    	;;
+    	-h|--help)
+    	echo this is helper \n the options you have is 
+    	shift
+    	;;
+	*)    # unknown option
+	POSITIONAL="$POSITIONAL $1" # save it in an array for later
+	ind=$(($ind + 1))
+    	shift # past argument
+    	;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+# raising exceptions
+if [ $ind -eq -1 ];then
+	echo irram source code needs to be provided
+	exit 1
+fi
+
+dup=0
+dir="."
+for f in "$dir"/*; do
+	if [ "$f" = "./$OUTPUT" ];then
+		dup=1
+ 	fi
+done
+
+if [ $dup -eq 1 ];then
+	while true; do
+    		read -p "Exec file name "$OUTPUT" already exists. Do you want it to be replaced? [y/n]      " yn
+    		case $yn in
+        	[Yy]* ) break;;
+        	[Nn]* ) exit;;
+        	* ) echo "Please answer y / n.";;
+    		esac
+	done
+fi
+
+#compiling
+
+echo compiling the files "${POSITIONAL}" into "${OUTPUT}" with irram version "${VERSION}"
+
+g++ -std=c++11 -g -O2 -I"${loc[$VERSION]}"/include -Xlinker -rpath -Xlinker "${loc[$VERSION]}"/lib $POSITIONAL  -L"${loc[$VERSION]}"/lib -liRRAM -lmpfr -lgmp  -lm -o $OUTPUT
+if [ $? -eq 0 ];then
+	echo compile finished
+fi
