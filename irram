@@ -2,7 +2,10 @@
 
 #location to irram lib with version control
 #version 0 is default
-loc=("/home/sewon/Desktop/irram/iRRAM_2017_01/installed" "/home/sewon/Desktop/irram/iRRAM_2018_01/installed" "/home/sewon/Desktop/irram/iRRAM_2013_01/installed")
+# pathtoirram is a path to irram dir which contains various versions of irram
+
+pathtoirram="/path/to/irram"
+loc=("$pathtoirram""/iRRAM_2017_01/installed" "$pathtoirram""/iRRAM_2018_01/installed" "$pathtoirram""/iRRAM_2013_01/installed")
 
 
 ind=-1
