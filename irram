@@ -4,12 +4,13 @@
 #version 0 is default
 # pathtoirram is a path to irram dir which contains various versions of irram
 
-pathtoirram="/path/to/irram"
+pathtoirram="/home/sewon/Desktop/irram"
 loc=("$pathtoirram""/iRRAM_2017_01/installed" "$pathtoirram""/iRRAM_2018_01/installed" "$pathtoirram""/iRRAM_2013_01/installed")
 
 
 ind=-1
 OUTPUT=a.out
+OUTPUTSELECTED=0
 VERSION=0
 
 POSITIONAL=()
@@ -20,6 +21,7 @@ key="$1"
 case $key in
     	-o|--output)
     	OUTPUT="$2"
+	OUTPUTSELECTED=1
     	shift # past argument
     	shift # past value
     	;;
@@ -28,13 +30,18 @@ case $key in
     	shift # past argument
     	shift # past value
     	;;
+    	-h|--help)
+    	    echo 'this is helper'
+	    echo 'the options you have is'
+	echo '-h | --help is gives you this instruction'
+	echo '-v | --version sets the version of irram you wanna use. (Default is 0)'
+	echo '-o | --output sets the name of exec file'
+	echo 'irram helloworld -o foo.cc will give you a irram template named foo.cc'
+    	exit 0
+    	;;
     	-*|--*)
     	echo unknown option "$1"
     	exit 1
-    	;;
-    	-h|--help)
-    	echo this is helper \n the options you have is 
-    	shift
     	;;
 	*)    # unknown option
 	POSITIONAL="$POSITIONAL $1" # save it in an array for later
@@ -51,6 +58,16 @@ if [ $ind -eq -1 ];then
 	exit 1
 fi
 
+
+helloworld=0
+if [ "${POSITIONAL// /}" = helloworld ];then
+	helloworld=1
+	if [ $OUTPUTSELECTED -eq 0 ];then
+	    OUTPUT="helloworld.cc"
+	fi
+	
+fi
+
 dup=0
 dir="."
 for f in "$dir"/*; do
@@ -60,6 +77,11 @@ for f in "$dir"/*; do
 done
 
 if [ $dup -eq 1 ];then
+    if [ $helloworld -eq 1 ];then
+	echo "The template name " "$OUTPUT" " already exists. Try with different output name"
+	exit 1
+    fi
+    
 	while true; do
     		read -p "Exec file name "$OUTPUT" already exists. Do you want it to be replaced? [y/n]      " yn
     		case $yn in
@@ -70,11 +92,24 @@ if [ $dup -eq 1 ];then
 	done
 fi
 
-#compiling
+#make hello world template
+if [ $helloworld -eq 1 ]; then
+    echo '#include "iRRAM/lib.h"' >> "$OUTPUT"
+    echo '#include "iRRAM/core.h"' >> "$OUTPUT"
+    echo 'using namespace iRRAM;' >> "$OUTPUT"
+    echo '' >> "$OUTPUT"
+    echo 'void compute()' >> "$OUTPUT"
+    echo '{' >> "$OUTPUT"
+    echo '    cout<<"halo world"' >> "$OUTPUT"
+    echo '}' >> "$OUTPUT"
+    exit 0
+fi
 
+#compiling
 echo compiling the files "${POSITIONAL}" into "${OUTPUT}" with irram version "${VERSION}"
 
 g++ -std=c++11 -g -O2 -I"${loc[$VERSION]}"/include -Xlinker -rpath -Xlinker "${loc[$VERSION]}"/lib $POSITIONAL  -L"${loc[$VERSION]}"/lib -liRRAM -lmpfr -lgmp  -lm -o $OUTPUT
+
 if [ $? -eq 0 ];then
 	echo compile finished
 fi
