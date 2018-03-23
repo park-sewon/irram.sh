@@ -96,11 +96,12 @@ fi
 if [ $helloworld -eq 1 ]; then
     echo '#include "iRRAM/lib.h"' >> "$OUTPUT"
     echo '#include "iRRAM/core.h"' >> "$OUTPUT"
+    echo '#include "iRRAM.h" >> "$OUTPUT"
     echo 'using namespace iRRAM;' >> "$OUTPUT"
     echo '' >> "$OUTPUT"
     echo 'void compute()' >> "$OUTPUT"
     echo '{' >> "$OUTPUT"
-    echo '    cout<<"halo world"' >> "$OUTPUT"
+    echo '    cout<<"halo world";' >> "$OUTPUT"
     echo '}' >> "$OUTPUT"
     exit 0
 fi
