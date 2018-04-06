@@ -1,9 +1,7 @@
 # irram.sh
 irramsh is a version and package manager + compiling helper for [iRRAM](http://irram.uni-trier.de), which
-is an open source C++ library for real number computation (Exact Real Arithmetic). It is developed in University of 
-Trier. 
- 
-See the below features of irramsh:
+is an open source C++ library for real number computation (Exact Real Arithmetic). 
+It will make iRRAM developer's life easier. 
 
 ### (1) Compile helper
 Suppose you have an iRRAM source code to compile:
