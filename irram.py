@@ -65,7 +65,7 @@ def add_irram():
         location = raw_input("Locate iRRAM installation directory:\n")
 
         try:
-            subprocess.check_call(message(location, "test.cc", "", "", "a.out"), shell=True)
+            subprocess.check_call(message(location, path+"/test.cc", "", "", "a.out"), shell=True)
             verif = False
 
         except Exception as e:
