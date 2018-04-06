@@ -1,8 +1,48 @@
 #!/usr/bin/python
+'''
 
+
+'''
 import sys, getopt, subprocess, errno, os
 import readline, glob
 path = os.path.dirname(os.path.abspath(__file__))
+
+
+def exodus(msg):
+    print msg + '  See "irramsh -h|--help" for further information.'
+    sys.exit(1)
+
+def usage():
+    s = 'iRRAM version and package manager.\n' \
+        '(1) You can control many versions of iRRAM; e.g., when you need to use' \
+        'a formal released version and indevelopment version at once.\n' \
+        '(2) You can easily compile an iRRAM source code; e.g., if you have hello.cc,' \
+        'all you need to do is  "irramsh -o myirram hello.cc\n' \
+        '(3) You can download and use various iRRAM packages easily; e.g., if you want to use' \
+        'a random number generator, all you need to do is "irramsh install irram-random" and add'\
+        '#include "irram-random.h" to your source code!\n\n'\
+        'irramsh has following options::\n' \
+        '-h|--help shows this message\n' \
+        '-v|--version shows which version of iRRAM is being used to compile\n' \
+        '-a|--all shows all versions of iRRAM that is registered to this irramsh\n'\
+        '-o|--output selects the output file name. it is a.out in default\n' \
+        '-f|--force forces compile when there already exists the output file.\n\n'\
+        'and following usages:\n'\
+        '"init" initializes the irramsh.\n' \
+        '"-o <filename.cc> helloworld" creates an irram template <filename.cc>\n'\
+        '"add" adds another iRRAM version to the irramsh\n'\
+        '"switch <n>" switchs the iRRAM compiler to the version <n>. Try "irramsh -a" to see what versions you have\n'\
+        '"clear" clears the saved configuration. Use it when the irramsh got too messy\n\n' \
+        'package managing:\n'\
+        '"show" shows available packages in irramsh package repo\n'\
+        '"list" shows installed packages in irramsh\n'\
+        '"install <package>" downloads and installs the package <package>\n' \
+        '"uninstall <package>" removes the installed package <package>\n' \
+        '"activate <package>" activates a decativated package\n' \
+        '"deactivate <package>" deactivates the installed package named <package>\n'
+
+    print(s)
+    sys.exit(0)
 
 
 def complete(text, state):
@@ -125,14 +165,18 @@ def load_package_index():
 
 def uninstall_package(pkgname):
 
-    pass
+    installed = load_package_config()
+    for p in installed:
+        if pkgname == p[0]:
+            return
+    exodus('Package name ' + pkgname + ' is not installed')
 
 def install_package(pkgname):
 
     installed = load_package_config()
     for p in installed:
         if pkgname == p[0]:
-            raise ValueError('Pakage name ' + pkgname + ' is already installed')
+            exodus('Pakage name ' + pkgname + ' is already installed')
 
 
     pkgs = load_package_index()
@@ -147,9 +191,9 @@ def install_package(pkgname):
                 with open(path + '/packages/pkgconfig', 'a') as f:
                     f.write(p[0] + ", 1\n")
             except:
-                raise
+                exodus('Installing ' + pkgname + ' failed')
             return
-    raise ValueError('Package name ' + pkgname +' does not exists.')
+    exodus('Package name ' + pkgname +' does not exists.')
 
 
 def deactivate_package(pkgname):
@@ -192,8 +236,11 @@ def load_package_paths():
                 s+=path+"/packages/"+p[0]+"/"+(l.strip())+" "
     return s, libpath
 
-
-
+'''
+Initializer: creates
+1. config
+2. packages/pkgconfig
+'''
 import os
 def initialize():
     newconfig = False
@@ -220,31 +267,23 @@ def initialize():
 '''
 MAIN CONTROL
 '''
+
+
 def main(argv):
-
-    if len(argv) == 1:
-        print "arguments are expected"
-        sys.exit()
-    loaded = False
-    while not loaded:
-        try:
-            locationlst, location, version = load_config()
-            loaded = True
-
-        except ValueError as err:
-            print(err)
-            if 'Configuration File Not Found' in err or 'Configuration File Defective' in err:
-                initialize()
-
-        except Exception as e:
-            print(e)
-            sys.exit()
+    if len(argv) == 0:
+        exodus("arguments are expected")
+    try:
+        locationlst, location, version = load_config()
+    except:
+        exodus('Configuration could not be loaded. Try "irramsh init" before running this.')
 
     INPUT = ''
     OUTPUT = 'a.out'
     FORCE = False
 
-    # Parsing option arguments
+    '''
+    Parsing option arguments
+    '''
     try:
         opts, args = getopt.getopt(argv,"afhvo:",["all","version","help","output="])
     except getopt.GetoptError as err:
@@ -254,8 +293,7 @@ def main(argv):
     for opt, arg in opts:
         print arg
         if opt in ('-h', "--help"):
-            print 'test.py -i <inputfile> -o <outputfile>'
-            sys.exit()
+            usage()
 
         elif opt in ("-a", "--all"):
             for l in locationlst:
@@ -273,7 +311,9 @@ def main(argv):
             OUTPUT = arg
 
 
-    # Parsing non-option arguments
+    '''
+    parsing non-option arguments
+    '''
     mainarg = args[0]
 
     if mainarg == "init":
@@ -321,18 +361,42 @@ def main(argv):
         sys.exit()
 
     elif mainarg == "list":
-        for p in  load_package_index():
-            print p[0]
+        q = load_package_config()
+        for d in q:
+            print d[0]
+
         sys.exit()
 
+    elif mainarg == "show":
+        q = load_package_config()
+        for p in load_package_index():
+            exists = False
+            for d in q:
+                if p[0] == d[0]:
+                    print p[0] + " [installed]"
+                    exists = True
+                    continue
+            if not exists:
+                print p[0]
+        sys.exit()
+
+
+    '''
+    Compile is by default. 
+    Check whether there already exists the output file.
+    If it does, abort except it is forced.
+    '''
     if os.path.exists(path+'/'+OUTPUT):
         if not FORCE:
             raise ValueError('File ' + OUTPUT + ' already exists')
-    # Compiling irram in default
     for f in args:
         INPUT += f + " "
     s, l = load_package_paths()
 
+
+    '''
+    Compile the iRRAM file.. 
+    '''
     subprocess.check_call(message(location, INPUT, s, l, OUTPUT), shell=True)
 
 if __name__ == "__main__":
