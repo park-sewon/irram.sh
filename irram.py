@@ -68,8 +68,10 @@ def add_irram():
             subprocess.check_call(message(location, path+"/test.cc", "", "", "a.out"), shell=True)
             verif = False
 
-        except Exception as e:
-            print e
+        except:
+            print "Couldn't compile a test file. Try again!"
+            sys.exit()
+
 
     num = -1
     with open(path+'/config', 'r') as f:
@@ -220,7 +222,9 @@ MAIN CONTROL
 '''
 def main(argv):
 
-
+    if len(argv) == 1:
+        print "arguments are expected"
+        sys.exit()
     loaded = False
     while not loaded:
         try:
