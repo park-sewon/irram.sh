@@ -401,8 +401,122 @@ def load_package_paths():
                 s += PATH+"/packages/"+p[0]+"/"+(l.strip())+" "
     return s, libpath
 
+#
+# MAKEFILE
+#
+def load_makefile_config():
+    '''
+       - makefile for the project irramsh
+       - The project uses irram version 3
+       * version
+       + 3
+       * packages
+       + irram-random
+       - irram-poly
+       * sources
+       + a.cc
+       + b.cc
+       - q.cc
+       * output
+       + a.out
+       + b.out
+       => compile a.cc b.cc with irram-random to a.out
+   '''
+    global CONF
+    source = []
+    version = -1
+    packages = []
+    output = 'a.out'
+    p = False
+    v = False
+    s = False
+    o = False
+    force = False
+    try:
+        with open('./irramsh_make', 'r') as f:
+            contents = f.readlines()
+            contents = [x.strip() for x in contents]
+    except Exception as e:
+        # print e
+        exodus('irramsh makefile does not exists')
 
+    for c in contents:
+        identifier = c[0]
+        name = c[1:].strip()
+        if identifier == '*':
+            if name == 'packages':
+                p = True
+                v = False
+                s = False
+                o = False
 
+            elif name == 'version':
+                p = False
+                v = True
+                s = False
+                o = False
+
+            elif name == 'sources':
+                p = False
+                v = False
+                s = True
+                o = False
+
+            elif name == 'output':
+                p = False
+                v = False
+                s = False
+                o = True
+            elif name == 'force':
+                force = True
+
+            else:
+                print identifier
+                exodus('irramsh makefile syntax error')
+
+        elif identifier == '+':
+            if p:
+                packages.append(name)
+            elif v:
+                if version != -1:
+                    exodus('more than one version is specified')
+                version = int(name)
+            elif s:
+                source.append(name)
+            elif o:
+                output = name
+        elif c[0] == '-':
+            continue
+        else:
+            exodus('irramsh makefile syntax error')
+
+    if version == -1:
+        exodus('version is not specified')
+
+    CONF.ACTIVATED = []
+    for pkg in packages:
+        exist = False
+        for pg in CONF.INSTALLED:
+            if pkg == pg[0]:
+                exist = True
+                CONF.ACTIVATED.append(pg)
+        if not exist:
+            exodus('package name '+ pkg +' is not installed')
+
+    exist = False
+    for v in CONF.VERSIONS:
+        if v[0] == version:
+            exist = True
+            CONF.VERSION = version
+            CONF.COMPILER = v[:]
+
+    if not exist:
+        exodus('version ' + str(version) + ' is not registered')
+    s = ''
+    for f in source:
+        s += f + " "
+
+    return force, s, output
 
 '''
 Initializer: creates
@@ -623,6 +737,10 @@ def main(argv):
             if not exists:
                 print p[0]
         sys.exit()
+
+    elif mainarg == 'make':
+        FORCE, INPUT, OUTPUT = load_makefile_config()
+        args = [] # to make input pure.
 
 
 

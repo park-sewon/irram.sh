@@ -105,6 +105,53 @@ $ irramsh -o randmatrix random.cc
 
 You can also remove or deactivate the installed packages. 
 
+### (4) irramsh_make
+Suppose you have a project _myproject_ where you need to compile many iRRAM files:
+_src1/a.cc_ _src1/b.cc_ _src2/c.cc_ _src3/d.cc_ with _*irramsh version 4*_ using irramsh
+packages _irram-pkg1_ and _irram-pkg2_ into an output file _out.out_.
+So, this is a big project which has its one compilation configuration. 
+
+When you have other projects working on simultaneously,
+in such case, you do not want to switch the irram configuration
+everytime to compile this; you do not want to activate/deactivate packages and
+switch version all the time. 
+Moreover, typing all the source files every time is clerical. 
+
+Using irramsh_make, you can store the project's own configuration
+and compile it without changing any configuration of irramsh!
+
+In the case, write the project's configuration into
+
+_*irramsh_make*_:
+```text
+- makefile for the project myproject
+- The project uses irram version 3
+- comment out with leading symbol '-'
+* version
+    + 4
+* packages
+    + irram-pkg1
+    - irram-random
+    + irram-pkg2
+* sources
+    + src1/a.cc
+    + src1/b.cc
+    - src1/a_tmp.cc
+    + src2/c.cc
+    + src3/d.cc
+* output
+    + out.out
+    - test.out
+* force
+    - force forces overwrite when 'out.out' already exists.
+    - is turned off by default
+```
+
+```console
+$ irramsh make
+[irramsh] compile finished
+```
+
 ## Using tips
 
 iRRAM projects that are based on in-development version 
@@ -121,7 +168,7 @@ or to add another version of
 iRRAM, after you locate the iRRAM installed directory, it asks you whether
 the located version is the official release version of iRRAM:
 
-```commandline
+```console
 $ irramsh init
 Locate iRRAM installation directory: /path/to/iRRAM/installed:
 > /path/to/irram/installed
@@ -133,7 +180,7 @@ version 2 @ /path1/installed Release date: 201402 (official release)
 ```
 Even if you did not specified when you added, you can later specify 
 the official release version among the registered versions:
-```commandline
+```console
 $ irramsh -a
 version 1 @ /path2/installed Release date: 201701
 version 2 @ /path1/installed Release date: 201402
