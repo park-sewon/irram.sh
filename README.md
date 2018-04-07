@@ -100,7 +100,7 @@ void compute()
 It can be done simply by
 
 ```console
-$ irramsh -o randmatrix randomTest.cc
+$ irramsh -o randmatrix random.cc
 ```
 
 You can also remove or deactivate the installed packages. 
