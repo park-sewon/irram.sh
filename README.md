@@ -105,7 +105,45 @@ $ irramsh -o randmatrix random.cc
 
 You can also remove or deactivate the installed packages. 
 
-## How to use?
+## Using tips
+
+iRRAM projects that are based on in-development version 
+may have some compatibility issues. Unless there is some
+inevitable reason for using only 
+the in-development version, packages distributed through irramsh 
+should offer to be compatible with the official version of iRRAM.
+However, this can be done only if the irramsh knows whether your
+iRRAM version is official or not. 
+
+When you first download the irramsh, you need to initialize it first 
+(It asks for the initialization anyway). When you try to initialize 
+or to add another version of 
+iRRAM, after you locate the iRRAM installed directory, it asks you whether
+the located version is the official release version of iRRAM:
+
+```commandline
+$ irramsh init
+Locate iRRAM installation directory: /path/to/iRRAM/installed:
+> /path/to/irram/installed
+Is this the official release of iRRAM? (201401 by Norbert Mueller) [y/n]:
+> Y
+$ irramsh -a
+version 1 @ /path2/installed Release date: 201701
+version 2 @ /path1/installed Release date: 201402 (official release)
+```
+Even if you did not specified when you added, you can later specify 
+the official release version among the registered versions:
+```commandline
+$ irramsh -a
+version 1 @ /path2/installed Release date: 201701
+version 2 @ /path1/installed Release date: 201402
+$ irramsh select 2
+$ irramsh -a
+version 1 @ /path2/installed Release date: 201701
+version 2 @ /path1/installed Release date: 201402 (official release)
+```
+
+## Installation
 1) You need (1) python2.7 and (2) locally installed iRRAM.
 To install iRRAM, visit http://irram.uni-trier.de
 
