@@ -21,7 +21,7 @@ __status__ = "Prototype, work in progress"
 
 
 def exodus(msg):
-    print msg + '\nSee "irramsh -h|--help" for further information.'
+    print(msg + '\nSee "irramsh -h|--help" for further information.')
     sys.exit(1)
 
 
@@ -192,7 +192,7 @@ def add_irram():
             verif = True
 
         except:
-            print 'Could not compile a test file with the selected version of iRRAM.'
+            print('Could not compile a test file with the selected version of iRRAM.')
             counter -= 1
 
     if not verif:
@@ -471,7 +471,7 @@ def load_makefile_config():
                 force = True
 
             else:
-                print identifier
+                print(identifier)
                 exodus('irramsh makefile syntax error')
 
         elif identifier == '+':
@@ -580,7 +580,7 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"afhvo:",["all","version","help","output="])
     except getopt.GetoptError as err:
-        print str(err)
+        print(str(err))
         sys.exit(2)
 
 
@@ -615,16 +615,16 @@ def main(argv):
     if showall:
         for l in CONF.VERSIONS:
             if int(l[3]) == 1:
-                print "version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1] + " (official release) "
+                print("version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1] + " (official release) ")
             else:
-                print "version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1]
+                print("version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1])
         sys.exit()
     elif showversion:
         l = CONF.COMPILER
         if int(l[3]) == 1:
-            print "Using version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1] + " (official release) "
+            print("Using version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1] + " (official release) ")
         else:
-            print "Using version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1]
+            print("Using version " + str(l[0]) + " @ " + l[2] + " Release date: " + l[1])
 
         sys.exit()
 
@@ -719,9 +719,9 @@ def main(argv):
         q = CONF.INSTALLED
         for d in q:
             if d[1] == 0:
-                print d[0] + " [deactivated]"
+                print(d[0] + " [deactivated]")
             else:
-                print d[0]
+                print(d[0])
 
         sys.exit()
 
@@ -731,11 +731,11 @@ def main(argv):
             exists = False
             for d in q:
                 if p[0] == d[0]:
-                    print p[0] + " [installed]"
+                    print(p[0] + " [installed]")
                     exists = True
                     continue
             if not exists:
-                print p[0]
+                print(p[0])
         sys.exit()
 
     elif mainarg == 'make':
@@ -763,7 +763,7 @@ def main(argv):
     '''
     try:
         subprocess.check_call(message(CONF.COMPILER[2], INPUT, s, l, OUTPUT), shell=True)
-        print '[irramsh] compile finished'
+        print('[irramsh] compile finished')
     except subprocess.CalledProcessError as err:
         # print err.output
         exodus('\n[irramsh] compile failed')
