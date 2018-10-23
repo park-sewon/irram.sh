@@ -183,7 +183,8 @@ def add_irram():
         readline.parse_and_bind("tab: complete")
         readline.set_completer(complete)
 
-        location = raw_input("Locate iRRAM installation directory: /path/to/iRRAM/installed \n")
+        location = input("Locate iRRAM installation directory: /path/to/iRRAM/installed \n")
+
         while location[-1] == '/':
             location = location[:-1]
 
@@ -202,13 +203,13 @@ def add_irram():
 
     official = 1
     while official not in ['Y', 'N', 'y', 'n']:
-        official = raw_input("Is this the official release of iRRAM? (201401 by Norbert Mueller) [y/n]:")
+        official = input("Is this the official release of iRRAM? (201401 by Norbert Mueller) [y/n]:")
     if official in ['Y', 'y']:
         official = 1
         version = '201702'
     else:
         official = 0
-        version = raw_input("[optional, 000000 by default] Set version's release year-month (e.g., 201701): \n")
+        version = input("[optional, 000000 by default] Set version's release year-month (e.g., 201701): \n")
         if len(version) == 6:
             try:
                 k = int(version)
@@ -316,11 +317,11 @@ def update_package_index():
 
 def load_package_index():
     global CONF
-    import urllib2
-    response = urllib2.urlopen('https://complexity.kaist.ac.kr/_media/irramsh/irramsh-package-index.odt')
-    html = response.readlines()
-    CONF.LIST = [x.strip().split(",".strip()) for x in html]
-    return [x.strip().split(",".strip()) for x in html]
+    from urllib.request import urlopen
+    response = urlopen('https://kaist.theoryofcomputation.asia/_media/irramsh/irramsh-package-index.odt')
+    html = [x.decode('utf8').strip() for x in response.readlines()]
+    CONF.LIST = [x.strip().split(','.strip()) for x in html]
+    return [x.strip().split(','.strip()) for x in html]
 
 
 def uninstall_package(pkgname):
