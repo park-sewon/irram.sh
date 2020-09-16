@@ -21,7 +21,7 @@ __status__ = "Prototype, work in progress"
 
 
 def exodus(msg):
-    print(msg + '\nSee "irramsh -h|--help" for further information.')
+    print(msg + '\nSee "irram -h|--help" for further information.')
     sys.exit(1)
 
 
@@ -30,27 +30,27 @@ def usage():
         '(1) You can control many versions of iRRAM; e.g., when you need to use' \
         'a formal released version and indevelopment version at once.\n' \
         '(2) You can easily compile an iRRAM source code; e.g., if you have hello.cc,' \
-        'all you need to do is  "irramsh -o myirram hello.cc\n' \
+        'all you need to do is  "irram -o myirram hello.cc\n' \
         '(3) You can download and use various iRRAM packages easily; e.g., if you want to use' \
-        'a random number generator, all you need to do is "irramsh install irram-random" and add'\
+        'a random number generator, all you need to do is "irram install irram-random" and add'\
         '#include "irram-random.h" to your source code!\n\n'\
-        'irramsh has following options::\n' \
+        'irram has following options::\n' \
         '-h|--help shows this message\n' \
         '-v|--version shows which version of iRRAM is being used to compile\n' \
-        '-a|--all shows all versions of iRRAM that is registered to this irramsh\n'\
+        '-a|--all shows all versions of iRRAM that is registered to this irram\n'\
         '-o|--output selects the output file name. it is a.out in default\n' \
         '-f|--force forces compile when there already exists the output file.\n\n'\
         'and following usages:\n'\
-        '"init" initializes the irramsh.\n' \
+        '"init" initializes the irram.\n' \
         '"-o <filename.cc> helloworld" creates an irram template <filename.cc>\n'\
-        '"add" adds another iRRAM version to the irramsh\n'\
-        '"switch <n>" switchs the iRRAM compiler to the version <n>. Try "irramsh -a" to see what versions you have\n'\
+        '"add" adds another iRRAM version to the irram\n'\
+        '"switch <n>" switchs the iRRAM compiler to the version <n>. Try "irram -a" to see what versions you have\n'\
         '"select <n>" names the registered version <n> to be the 201401 official release of iRRAM\n'\
         '"deselect" de-select the selected official release version of iRRAM\n'\
-        '"clear" clears the saved configuration. Use it when the irramsh got too messy\n\n' \
+        '"clear" clears the saved configuration. Use it when the irram got too messy\n\n' \
         'package managing:\n'\
-        '"show" shows available packages in irramsh package repo\n'\
-        '"list" shows installed packages in irramsh\n'\
+        '"show" shows available packages in irram package repo\n'\
+        '"list" shows installed packages in irram\n'\
         '"install <package>" downloads and installs the package <package>\n' \
         '"uninstall <package>" removes the installed package <package>\n' \
         '"activate <package>" activates a decativated package\n' \
@@ -610,7 +610,7 @@ def main(argv):
         load_config()
         load_package_config()
     except Exception as e:
-        exodus('Configuration could not be loaded. Try "irramsh clear/init" First.')
+        exodus('Configuration could not be loaded. Try "irram clear/init" First.')
 
 
     if showall:
