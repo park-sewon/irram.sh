@@ -21,7 +21,7 @@ void compute()
 Then, this can be compiled simply by 
 
 ```console
-$ irramsh -o compute_pi pi.cc
+$ irram -o compute_pi pi.cc
 
 ```
 
