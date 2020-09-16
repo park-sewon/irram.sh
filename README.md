@@ -34,27 +34,27 @@ you want ot install locally), you can add the different version of iRRAM
 by simply doing
 
 ```console
-$ irramsh -v
+$ irram -v
 
 Using version 1 installed in /path/installed
-$ irramsh add
+$ irram add
 Locate iRRAM installation directory:
 write/path/to/new/installed
 
-$ irramsh --all
+$ irram --all
 Version 1 @ /path/to/old/irram/installed
 Version 2 @ /path/to/new/irram/installed
 
-$ irramsh switch 2
-$ irramsh -v
+$ irram switch 2
+$ irram -v
 Using version 2 installed in /new/path/installed
 ```
 
 
 Of course, you can switch it back by simply typing
 ```console
-$ irramsh switch 1
-$ irramsh -v
+$ irram switch 1
+$ irram -v
 Using version 1 installed in /path/installed
 ```
 
@@ -69,12 +69,12 @@ You can see current status of irramsh package
 You can see what packages are available by
 
 ```console
-$ irramsh show
+$ irram show
 irram-random
 irram-poly (tba)
 irram-linear-algebra (tba)
 
-$ irramsh install irram-random
+$ irram install irram-random
 ...
 installation complete
 $ irram list
@@ -100,7 +100,7 @@ void compute()
 It can be done simply by
 
 ```console
-$ irramsh -o randmatrix random.cc
+$ irram -o randmatrix random.cc
 ```
 
 You can also remove or deactivate the installed packages. 
@@ -148,7 +148,7 @@ _*irramsh_make*_:
 ```
 
 ```console
-$ irramsh make
+$ irram make
 [irramsh] compile finished
 ```
 
@@ -169,23 +169,23 @@ iRRAM, after you locate the iRRAM installed directory, it asks you whether
 the located version is the official release version of iRRAM:
 
 ```console
-$ irramsh init
+$ irram init
 Locate iRRAM installation directory: /path/to/iRRAM/installed:
 > /path/to/irram/installed
 Is this the official release of iRRAM? (201401 by Norbert Mueller) [y/n]:
 > Y
-$ irramsh -a
+$ irram -a
 version 1 @ /path2/installed Release date: 201701
 version 2 @ /path1/installed Release date: 201402 (official release)
 ```
 Even if you did not specified when you added, you can later specify 
 the official release version among the registered versions:
 ```console
-$ irramsh -a
+$ irram -a
 version 1 @ /path2/installed Release date: 201701
 version 2 @ /path1/installed Release date: 201402
-$ irramsh select 2
-$ irramsh -a
+$ irram select 2
+$ irram -a
 version 1 @ /path2/installed Release date: 201701
 version 2 @ /path1/installed Release date: 201402 (official release)
 ```
